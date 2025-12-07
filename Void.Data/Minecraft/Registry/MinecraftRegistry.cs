@@ -1,0 +1,10 @@
+using System.Text.Json.Serialization;
+
+namespace Void.Data.Minecraft.Registry;
+
+public class MinecraftRegistry
+{
+  [JsonPropertyName("minecraft:item")] public required MinecraftItemRegistry MinecraftItemRegistry { get; init; }
+
+  [JsonPropertyName("minecraft:menu")] public required MinecraftMenuRegistry MinecraftMenuRegistry { get; init; }
+}

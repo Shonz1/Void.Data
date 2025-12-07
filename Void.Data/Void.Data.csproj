@@ -1,0 +1,79 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <JsonResource Include="Resources\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Void.Minecraft">
+      <HintPath>..\..\Void\src\Minecraft\bin\Debug\net9.0\Void.Minecraft.dll</HintPath>
+    </Reference>
+    <Reference Include="Void.Proxy.Api">
+      <HintPath>..\..\Void\src\Api\bin\Debug\net9.0\Void.Proxy.Api.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <CompressedJson Include="@(JsonResource)">
+      <CompressedPath>$(IntermediateOutputPath)Resources/%(RecursiveDir)%(Filename)%(Extension).gz</CompressedPath>
+      <LogicalName>Resources/%(RecursiveDir)%(Filename)%(Extension).gz</LogicalName>
+    </CompressedJson>
+
+    <EmbeddedResource Remove="@(JsonResource)" />
+
+    <EmbeddedResource Include="@(CompressedJson->'%(CompressedPath)')">
+      <Link>%(CompressedJson.LogicalName)</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <UsingTask TaskName="CompressJsonTask"
+             TaskFactory="RoslynCodeTaskFactory"
+             AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <Sources ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+      <Outputs ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.IO.Compression" />
+      <Code Type="Fragment" Language="cs"><![CDATA[
+        if (Sources.Length != Outputs.Length)
+        {
+            Log.LogError("Sources and Outputs length mismatch.");
+            return false;
+        }
+
+        for (int i = 0; i < Sources.Length; i++)
+        {
+            var source = Sources[i].ItemSpec;
+            var output = Outputs[i].ItemSpec;
+            
+            Log.LogMessage(MessageImportance.High, $"Compressing {source} -> {output}");
+
+            Directory.CreateDirectory(Path.GetDirectoryName(output)!);
+
+            using (var input = File.OpenRead(source))
+            using (var outputStream = File.Create(output))
+            using (var gzip = new GZipStream(outputStream, CompressionLevel.Optimal))
+            {
+                input.CopyTo(gzip);
+            }
+        }
+      ]]></Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="CompressJsonResources" BeforeTargets="CoreCompile">
+    <CompressJsonTask
+      Sources="@(JsonResource)"
+      Outputs="@(CompressedJson->'%(CompressedPath)')" />
+  </Target>
+
+</Project>
