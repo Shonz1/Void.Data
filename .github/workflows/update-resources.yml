@@ -19,7 +19,8 @@ jobs:
           java-version: '21'
 
       - name: Update resources
-        run: cd ./Void.Data && ./update-resources.sh
+        run: ./update-resources.sh
+        working-directory: ./Void.Data
 
       - name: Generate branch name
         run: echo "BRANCH_NAME=feat/update-resources-$(date +'%Y-%m-%d')" >> $GITHUB_ENV
