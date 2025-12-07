@@ -14,7 +14,7 @@ for version in $releases; do
   IFS="$version_delimiter"
   read -ra version_parts <<< "$version"
   unset IFS
-git remote add origin https://github.com/Shonz1/Void.Data.git
+
   if [ "${version_parts[0]}" == "1" ] && [ "${version_parts[1]}" -lt "14" ]; then
     echo "Version ${version} is below 1.14 and is not supported by the data generator, skipping..."
     continue
