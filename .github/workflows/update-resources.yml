@@ -1,0 +1,36 @@
+name: "Update resources"
+
+on:
+  schedule:
+    - cron: "0 8 * * *"
+
+jobs:
+  update-resources:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update resources
+        run: ./update-resources.sh
+        working-directory: ./Void.Data
+
+      - name: Generate branch name
+        run: echo "BRANCH_NAME=feat/update-resources-$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+      - name: Commit changed files and create PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email github-actions[bot]@users.noreply.github.com
+          git fetch --all
+          if git diff --quiet; then
+            git checkout -b ${BRANCH_NAME}
+            git add .
+            git commit -m "Add new resource files"
+            git push origin HEAD:${BRANCH_NAME}
+            gh pr create --title "Add resource files" --body "This PR adds the resource files." --head ${BRANCH_NAME} --base main --reviewer ${{ github.repository_owner }}
+          else
+            echo "No changes to commit."
+          fi
