@@ -36,7 +36,7 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
           git fetch --all
-          if git diff --quiet; then
+          if ! git diff --quiet; then
             git checkout -b ${BRANCH_NAME}
             git add .
             git commit -m "Add new resource files"
