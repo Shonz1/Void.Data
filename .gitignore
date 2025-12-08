@@ -6,3 +6,4 @@ riderModule.iml
 .idea
 .java-version
 global.json
+.DS_Store
