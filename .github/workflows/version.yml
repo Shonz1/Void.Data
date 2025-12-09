@@ -17,10 +17,10 @@ on:
         value: ${{ jobs.release-please.outputs.app-version || jobs.dev.outputs.app-fallback-version }}
       release:
         description: "Release Created"
-        value: ${{ jobs.release-please.outputs.release_created == 'true' }}
+        value: ${{ jobs.release-please.outputs.release-created == 'true' }}
       tag-name:
         description: "Release Tag Name"
-        value: ${{ jobs.release-please.outputs.tag_name }}
+        value: ${{ jobs.release-please.outputs.tag-name }}
 
 env:
   DOTNET_VERSION: ${{ github.event.inputs.dotnet_version || join(fromJSON('["9.0.x","10.0.x"]'), '\n') }}
