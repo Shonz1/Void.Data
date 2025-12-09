@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/Shonz1/Void.Data/compare/v0.1.3...v0.1.4) (2025-12-09)
+
+
+### Bug Fixes
+
+* workflows mistakes ([#18](https://github.com/Shonz1/Void.Data/issues/18)) ([0dded24](https://github.com/Shonz1/Void.Data/commit/0dded24083d3c7ae51ae211de3d92e03439d0507))
+
 ## [0.1.3](https://github.com/Shonz1/Void.Data/compare/v0.1.2...v0.1.3) (2025-12-09)
 
 
