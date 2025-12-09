@@ -34,7 +34,7 @@ jobs:
 
       - name: Rename Artifacts
         shell: bash
-        run: mv artifacts/Void.Data.nupkg artifacts/void-data.nupkg
+        run: mv artifacts/Void.Data.${{ inputs.app-version }}.nupkg artifacts/void-data.nupkg
 
       - name: NuGet Push
         run: dotnet nuget push artifacts/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
