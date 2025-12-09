@@ -30,11 +30,11 @@ jobs:
         run: dotnet build --configuration Release /p:Version=${{ inputs.app-version }}
 
       - name: Pack
-        run: dotnet pack src/Api --configuration Release --output artifacts /p:Version=${{ inputs.app-version }}
+        run: dotnet pack Void.Data --configuration Release --output artifacts /p:Version=${{ inputs.app-version }}
 
       - name: Rename Artifacts
         shell: bash
-        run: mv artifacts/Void.Data.dll artifacts/Void.Data.nupkg
+        run: mv artifacts/Void.Data.dll artifacts/void-data.nupkg
 
       - name: NuGet Push
         run: dotnet nuget push artifacts/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
