@@ -18,21 +18,21 @@ on:
 
 jobs:
   semver:
-    uses: ./.github/workflows/version.yaml
+    uses: ./.github/workflows/version.yml
     secrets: inherit
     with:
       dotnet-version: ${{ github.event.inputs.dotnet-version }}
 
   build:
     needs: semver
-    uses: ./.github/workflows/dotnet.yaml
+    uses: ./.github/workflows/dotnet.yml
     with:
       dotnet-version: ${{ needs.semver.outputs.dotnet-version }}
       app-version: ${{ needs.semver.outputs.app-version }}
 
   github:
     needs: [build,semver]
-    uses: ./.github/workflows/github.yaml
+    uses: ./.github/workflows/github.yml
     secrets: inherit
     with:
       tag_name: ${{ needs.semver.outputs.tag-name }}
@@ -40,7 +40,7 @@ jobs:
 
   nuget:
     needs: [build,semver]
-    uses: ./.github/workflows/nuget.yaml
+    uses: ./.github/workflows/nuget.yml
     secrets: inherit
     with:
       dotnet-version: ${{ needs.semver.outputs.dotnet-version }}
