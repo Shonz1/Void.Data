@@ -4,17 +4,15 @@ on:
   pull_request:
 
 jobs:
-  build:
-    steps:
-      semver:
-        uses: ./.github/workflows/version.yml
-        secrets: inherit
-        with:
-          release-please: false
+  semver:
+    uses: ./.github/workflows/version.yml
+    secrets: inherit
+    with:
+      release-please: false
 
-      build:
-        needs: semver
-        uses: ./.github/workflows/dotnet.yml
-        with:
-          dotnet-version: ${{ needs.semver.outputs.dotnet-version }}
-          app-version: ${{ needs.semver.outputs.app-version }}
+  build:
+    needs: semver
+    uses: ./.github/workflows/dotnet.yml
+    with:
+      dotnet-version: ${{ needs.semver.outputs.dotnet-version }}
+      app-version: ${{ needs.semver.outputs.app-version }}
