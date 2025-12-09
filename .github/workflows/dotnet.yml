@@ -27,7 +27,7 @@ jobs:
         run: dotnet build --configuration Release /p:Version=${{ inputs.app-version }}
 
       - name: Publish
-        run: dotnet publish --output artifacts --configuration Release --no-build /p:DebugType=embedded /p:Version=${{ inputs.app-version }}
+        run: dotnet publish Void.Data --output artifacts --configuration Release --no-build /p:DebugType=embedded /p:Version=${{ inputs.app-version }}
 
       - name: Rename Artifact
         shell: bash
