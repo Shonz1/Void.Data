@@ -1,42 +1,43 @@
 using System.IO.Compression;
 using System.Text.Json;
-using Void.Data.Minecraft.Registry;
 using Void.Minecraft.Network;
 using Void.Proxy.Api.Network;
 
 namespace Void.Data.Minecraft.Packet;
 
-public class MinecraftPacketRegistry
+internal class MinecraftPacketRegistry
 {
-  private static readonly Dictionary<ProtocolVersion, MinecraftPacketPhaseRegistry> Cache = new ();
+  private static readonly Dictionary<ProtocolVersion, MinecraftPacketPhaseRegistry> Cache = new();
 
-  public static int GetId(ProtocolVersion protocolVersion, Phase phase, Direction direction, Identifier identifier)
+  public static MinecraftPacketPhaseRegistry? GetRegistry(ProtocolVersion protocolVersion)
   {
-    var packetRegistry = GetPacketRegistry(protocolVersion, phase, direction);
-    if (packetRegistry == null)
-      return -1;
+    var assembly = typeof(MinecraftPacketRegistry).Assembly;
+    var versionName = protocolVersion.VersionIntroducedIn;
 
-    var identifierString = identifier.ToString();
+    lock (Cache)
+    {
+      if (!Cache.TryGetValue(protocolVersion, out var cachedRegistry))
+      {
+        using var stream = assembly.GetManifestResourceStream($"Resources/{versionName}/reports/packets.json.gz");
+        if (stream == null)
+          return null;
 
-    if (!packetRegistry.TryGetValue(identifierString, out var packet))
-      return -1;
+        using var gzip = new GZipStream(stream, CompressionMode.Decompress);
 
-    return packet.ProtocolId;
+        var parsedRegistry = JsonSerializer.Deserialize<MinecraftPacketPhaseRegistry>(gzip);
+        if (parsedRegistry == null)
+          return null;
+
+        Cache.Add(protocolVersion, parsedRegistry);
+
+        return parsedRegistry;
+      }
+
+      return cachedRegistry;
+    }
   }
 
-  public static Identifier? GetIdentifier(ProtocolVersion protocolVersion, Phase phase, Direction direction, int protocolId)
-  {
-    var packetRegistry = GetPacketRegistry(protocolVersion, phase, direction);
-
-    if (packetRegistry == null)
-      return null;
-
-    var match = packetRegistry.FirstOrDefault(i => i.Value.ProtocolId == protocolId);
-
-    return match.Key != null ? Identifier.FromString(match.Key) : null;
-  }
-
-  private static MinecraftPacketDirectionRegistry GetDirectionRegistry(MinecraftPacketPhaseRegistry registry,
+  public static MinecraftPacketDirectionRegistry GetDirectionRegistry(MinecraftPacketPhaseRegistry registry,
     Phase phase)
   {
     return phase switch
@@ -50,37 +51,14 @@ public class MinecraftPacketRegistry
     };
   }
 
-  private static Dictionary<string, MinecraftPacket>? GetPacketRegistry(ProtocolVersion protocolVersion, Phase phase, Direction direction)
+  public static Dictionary<string, MinecraftPacket>? GetPacketRegistry(MinecraftPacketDirectionRegistry registry,
+    Direction direction)
   {
-    var assembly = typeof(MinecraftPacketRegistry).Assembly;
-    var versionName = protocolVersion.VersionIntroducedIn;
-
-    lock (Cache)
+    return direction switch
     {
-      if (!Cache.ContainsKey(protocolVersion))
-      {
-        using var stream = assembly.GetManifestResourceStream($"Resources/{versionName}/reports/packets.json.gz");
-        if (stream == null)
-          return null;
-
-        using var gzip = new GZipStream(stream, CompressionMode.Decompress);
-
-        var parsedRegistry = JsonSerializer.Deserialize<MinecraftPacketPhaseRegistry>(gzip);
-        if (parsedRegistry == null)
-          return null;
-
-        Cache.Add(protocolVersion, parsedRegistry);
-      }
-
-      var registry = Cache[protocolVersion];
-      var directionRegistry = GetDirectionRegistry(registry, phase);
-
-      return direction switch
-      {
-        Direction.Clientbound => directionRegistry.Clientbound,
-        Direction.Serverbound => directionRegistry.Serverbound,
-        _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
-      };
-    }
+      Direction.Clientbound => registry.Clientbound,
+      Direction.Serverbound => registry.Serverbound,
+      _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
+    };
   }
 }
