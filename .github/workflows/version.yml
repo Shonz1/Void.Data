@@ -52,7 +52,7 @@ jobs:
     outputs:
       release-created: ${{ steps.release.outputs.release_created }}
       app-version: ${{ steps.release.outputs.version }}
-      tag-name: ${{ steps.release.outputs.tag-name }}
+      tag-name: ${{ steps.release.outputs.tag_name }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
