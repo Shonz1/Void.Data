@@ -1,0 +1,47 @@
+on:
+  workflow_call:
+    inputs:
+      dotnet-version:
+        type: string
+        required: true
+      app-version:
+        type: string
+        required: true
+      release:
+        type: string
+        required: true
+
+jobs:
+  push:
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    if: ${{ fromJson(inputs.release) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ inputs.dotnet-version }}
+
+      - name: Build
+        run: dotnet build --configuration Release /p:Version=${{ inputs.app-version }}
+
+      - name: Pack
+        run: dotnet pack src/Api --configuration Release --output artifacts /p:Version=${{ inputs.app-version }}
+
+      - name: Rename Artifacts
+        shell: bash
+        run: mv artifacts/Void.Data.dll artifacts/Void.Data.nupkg
+
+      - name: NuGet Push
+        run: dotnet nuget push artifacts/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+
+      - name: Upload a Pack Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          path: artifacts
+          compression-level: 9
+          if-no-files-found: error

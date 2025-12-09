@@ -1,0 +1,20 @@
+name: ".NET Policy Workflow"
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    steps:
+      semver:
+        uses: ./.github/workflows/version.yaml
+        secrets: inherit
+        with:
+          release-please: false
+
+      build:
+        needs: semver
+        uses: ./.github/workflows/dotnet.yaml
+        with:
+          dotnet-version: ${{ needs.semver.outputs.dotnet-version }}
+          app-version: ${{ needs.semver.outputs.app-version }}
