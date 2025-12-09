@@ -9,14 +9,10 @@
   <ItemGroup>
     <JsonResource Include="Resources\**\*" />
   </ItemGroup>
-
+  
   <ItemGroup>
-    <Reference Include="Void.Minecraft">
-      <HintPath>..\..\Void\src\Minecraft\bin\Debug\net9.0\Void.Minecraft.dll</HintPath>
-    </Reference>
-    <Reference Include="Void.Proxy.Api">
-      <HintPath>..\..\Void\src\Api\bin\Debug\net9.0\Void.Proxy.Api.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Void.Minecraft" Version="0.5.4" />
+    <PackageReference Include="Void.Proxy.Api" Version="0.5.4" />
   </ItemGroup>
 
   <ItemGroup>
