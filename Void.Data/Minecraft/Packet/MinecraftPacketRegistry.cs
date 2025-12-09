@@ -55,7 +55,6 @@ public class MinecraftPacketRegistry
     var assembly = typeof(MinecraftItemRegistry).Assembly;
     var versionName = protocolVersion.VersionIntroducedIn;
 
-
     lock (Cache)
     {
       if (!Cache.ContainsKey(protocolVersion))
