@@ -1,0 +1,66 @@
+on:
+  workflow_call:
+    inputs:
+      dotnet-version:
+        type: string
+        required: false
+      release-please:
+        type: boolean
+        required: false
+        default: true
+    outputs:
+      dotnet-version:
+        description: "Generated .NET Version"
+        value: ${{ jobs.dev.outputs.dotnet-version }}
+      void-version:
+        description: "Generated Void Version"
+        value: ${{ jobs.release-please.outputs.void-version || jobs.dev.outputs.void-fallback-version }}
+      release:
+        description: "Release Created"
+        value: ${{ jobs.release-please.outputs.release_created == 'true' }}
+      tag_name:
+        description: "Release Tag Name"
+        value: ${{ jobs.release-please.outputs.tag_name }}
+
+env:
+  DOTNET_VERSION: ${{ github.event.inputs.dotnet_version || join(fromJSON('["9.0.x","10.0.x"]'), '\n') }}
+
+jobs:
+  dev:
+    runs-on: ubuntu-latest
+    outputs:
+      dotnet-version: ${{ steps.dotnet-version.outputs.result }}
+      fallback-version: ${{ steps.fallback-version.outputs.result }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set .NET SDK version
+        id: dotnet-version
+        run: printf 'result<<EOF\n%b\nEOF\n' "$DOTNET_VERSION" >> "$GITHUB_OUTPUT"
+        
+      - name: Set fallback version
+        id: fallback-version
+        run: |
+          base=$(jq -r '.["."]' .github/RELEASE_PLEASE/manifest.json)
+          sha=$(git rev-parse --short HEAD)
+          echo "result=${base}+${sha}" >> $GITHUB_OUTPUT
+
+  release-please:
+    if: ${{ inputs.release-please }}
+    runs-on: ubuntu-latest
+    outputs:
+      release-created: ${{ steps.release.outputs.release_created }}
+      app-version: ${{ steps.release.outputs.version }}
+      tag-name: ${{ steps.release.outputs.tag0name }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create Release
+        id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: .github/RELEASE_PLEASE/config.json
+          manifest-file: .github/RELEASE_PLEASE/manifest.json

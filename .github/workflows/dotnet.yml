@@ -1,0 +1,43 @@
+on:
+  workflow_call:
+    inputs:
+      dotnet-version:
+        type: string
+        required: true
+      app-version:
+        type: string
+        required: true
+
+jobs:
+  build:
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      COMMIT_MESSAGE: ${{ github.event_name == 'pull_request' && github.event.pull_request.title || github.event.head_commit.message }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ inputs.dotnet-version }}
+
+      - name: Build
+        run: dotnet build --configuration Release /p:Version=${{ inputs.app-version }}
+
+      - name: Publish
+        run: dotnet publish --output artifacts --configuration Release --no-build /p:DebugType=embedded /p:Version=${{ inputs.app-version }}
+
+      - name: Rename Artifact
+        shell: bash
+        run: mv artifacts/Void.Data.dll artifacts/void-data.dll
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: void-data.dll
+          path: artifacts/void-data.dll
+          compression-level: 9
+          if-no-files-found: error
+

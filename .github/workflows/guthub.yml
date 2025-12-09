@@ -1,0 +1,28 @@
+on:
+  workflow_call:
+    inputs:
+      tag-name:
+        type: string
+        required: true
+      release:
+        type: string
+        required: true
+
+jobs:
+  push:
+    if: ${{ fromJson(inputs.release) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Upload Release Artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload ${{ inputs.tag-name }} artifacts/void-data.dll
