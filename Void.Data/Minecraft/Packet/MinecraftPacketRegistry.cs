@@ -52,7 +52,7 @@ public class MinecraftPacketRegistry
 
   private static Dictionary<string, MinecraftPacket>? GetPacketRegistry(ProtocolVersion protocolVersion, Phase phase, Direction direction)
   {
-    var assembly = typeof(MinecraftItemRegistry).Assembly;
+    var assembly = typeof(MinecraftPacketRegistry).Assembly;
     var versionName = protocolVersion.VersionIntroducedIn;
 
     lock (Cache)
