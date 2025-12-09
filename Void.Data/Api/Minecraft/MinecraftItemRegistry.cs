@@ -15,10 +15,13 @@ public static class MinecraftItemRegistry
 
     var identifierString = identifier.ToString();
 
-    if (!registry.MinecraftItemRegistry.Entries.TryGetValue(identifierString, out var item))
-      item = registry.MinecraftItemRegistry.Entries[registry.MinecraftItemRegistry.Default];
+    if (registry.MinecraftItemRegistry.Entries.TryGetValue(identifierString, out var item))
+      return item.ProtocolId;
 
-    return item.ProtocolId;
+    if (registry.MinecraftItemRegistry.Entries.TryGetValue(registry.MinecraftItemRegistry.Default, out item))
+      return item.ProtocolId;
+
+    return 0;
   }
 
   public static int GetMeta(ProtocolVersion protocolVersion, Identifier identifier)
@@ -29,10 +32,13 @@ public static class MinecraftItemRegistry
 
     var identifierString = identifier.ToString();
 
-    if (!registry.MinecraftItemRegistry.Entries.TryGetValue(identifierString, out var item))
-      item = registry.MinecraftItemRegistry.Entries[registry.MinecraftItemRegistry.Default];
+    if (registry.MinecraftItemRegistry.Entries.TryGetValue(identifierString, out var item))
+      return item.Meta;
 
-    return item.Meta;
+    if (registry.MinecraftItemRegistry.Entries.TryGetValue(registry.MinecraftItemRegistry.Default, out item))
+      return item.Meta;
+
+    return 0;
   }
 
   public static Identifier GetIdentifier(ProtocolVersion protocolVersion, int itemId, int meta = 0)
@@ -41,7 +47,7 @@ public static class MinecraftItemRegistry
     if (registry == null)
       return air;
 
-    var match = registry.MinecraftItemRegistry.Entries.FirstOrDefault(i => i.Value.ProtocolId == itemId);
+    var match = registry.MinecraftItemRegistry.Entries.FirstOrDefault(i => i.Value.ProtocolId == itemId && i.Value.Meta == meta);
 
     return match.Key != null ? Identifier.FromString(match.Key) : air;
   }

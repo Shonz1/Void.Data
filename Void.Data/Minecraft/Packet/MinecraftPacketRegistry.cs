@@ -16,7 +16,7 @@ internal class MinecraftPacketRegistry
 
     lock (Cache)
     {
-      if (!Cache.ContainsKey(protocolVersion))
+      if (!Cache.TryGetValue(protocolVersion, out var cachedRegistry))
       {
         using var stream = assembly.GetManifestResourceStream($"Resources/{versionName}/reports/packets.json.gz");
         if (stream == null)
@@ -29,9 +29,11 @@ internal class MinecraftPacketRegistry
           return null;
 
         Cache.Add(protocolVersion, parsedRegistry);
+
+        return parsedRegistry;
       }
 
-      return Cache[protocolVersion];
+      return cachedRegistry;
     }
   }
 
