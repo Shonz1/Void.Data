@@ -27,10 +27,13 @@ public class MinecraftPacketRegistry
   public static Identifier? GetIdentifier(ProtocolVersion protocolVersion, Phase phase, Direction direction, int protocolId)
   {
     var packetRegistry = GetPacketRegistry(protocolVersion, phase, direction);
+
     if (packetRegistry == null)
       return null;
 
-    return packetRegistry.FirstOrDefault(i => i.Value.ProtocolId == protocolId).Key;
+    var match = packetRegistry.FirstOrDefault(i => i.Value.ProtocolId == protocolId);
+
+    return match.Key != null ? Identifier.FromString(match.Key) : null;
   }
 
   private static MinecraftPacketDirectionRegistry GetDirectionRegistry(MinecraftPacketPhaseRegistry registry,
@@ -52,29 +55,33 @@ public class MinecraftPacketRegistry
     var assembly = typeof(MinecraftItemRegistry).Assembly;
     var versionName = protocolVersion.VersionIntroducedIn;
 
-    if (!Cache.ContainsKey(protocolVersion))
+
+    lock (Cache)
     {
-      using var stream = assembly.GetManifestResourceStream($"Resources/{versionName}/reports/packets.json.gz");
-      if (stream == null)
-        return null;
+      if (!Cache.ContainsKey(protocolVersion))
+      {
+        using var stream = assembly.GetManifestResourceStream($"Resources/{versionName}/reports/packets.json.gz");
+        if (stream == null)
+          return null;
 
-      using var gzip = new GZipStream(stream, CompressionMode.Decompress);
+        using var gzip = new GZipStream(stream, CompressionMode.Decompress);
 
-      var parsedRegistry = JsonSerializer.Deserialize<MinecraftPacketPhaseRegistry>(gzip);
-      if (parsedRegistry == null)
-        return null;
+        var parsedRegistry = JsonSerializer.Deserialize<MinecraftPacketPhaseRegistry>(gzip);
+        if (parsedRegistry == null)
+          return null;
 
-      Cache.Add(protocolVersion, parsedRegistry);
+        Cache.Add(protocolVersion, parsedRegistry);
+      }
+
+      var registry = Cache[protocolVersion];
+      var directionRegistry = GetDirectionRegistry(registry, phase);
+
+      return direction switch
+      {
+        Direction.Clientbound => directionRegistry.Clientbound,
+        Direction.Serverbound => directionRegistry.Serverbound,
+        _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
+      };
     }
-
-    var registry = Cache[protocolVersion];
-    var directionRegistry = GetDirectionRegistry(registry, phase);
-
-    return direction switch
-    {
-      Direction.Clientbound => directionRegistry.Clientbound,
-      Direction.Serverbound => directionRegistry.Serverbound,
-      _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null)
-    };
   }
 }
