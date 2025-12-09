@@ -12,13 +12,13 @@ on:
       dotnet-version:
         description: "Generated .NET Version"
         value: ${{ jobs.dev.outputs.dotnet-version }}
-      void-version:
-        description: "Generated Void Version"
-        value: ${{ jobs.release-please.outputs.void-version || jobs.dev.outputs.void-fallback-version }}
+      app-version:
+        description: "Generated App Version"
+        value: ${{ jobs.release-please.outputs.app-version || jobs.dev.outputs.app-fallback-version }}
       release:
         description: "Release Created"
         value: ${{ jobs.release-please.outputs.release_created == 'true' }}
-      tag_name:
+      tag-name:
         description: "Release Tag Name"
         value: ${{ jobs.release-please.outputs.tag_name }}
 
@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       dotnet-version: ${{ steps.dotnet-version.outputs.result }}
-      fallback-version: ${{ steps.fallback-version.outputs.result }}
+      app-fallback-version: ${{ steps.fallback-version.outputs.result }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -38,7 +38,7 @@ jobs:
       - name: Set .NET SDK version
         id: dotnet-version
         run: printf 'result<<EOF\n%b\nEOF\n' "$DOTNET_VERSION" >> "$GITHUB_OUTPUT"
-        
+
       - name: Set fallback version
         id: fallback-version
         run: |
