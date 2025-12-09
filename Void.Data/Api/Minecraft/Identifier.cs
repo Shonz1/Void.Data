@@ -1,4 +1,4 @@
-namespace Void.Data.Minecraft;
+namespace Void.Data.Api.Minecraft;
 
 public record Identifier(string Value, string Namespace = "minecraft")
 {
