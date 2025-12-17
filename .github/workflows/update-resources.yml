@@ -36,9 +36,9 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
           git fetch --all
-          if ! git diff --quiet; then
+          git add .
+          if ! git diff HEAD --quiet; then
             git checkout -b ${BRANCH_NAME}
-            git add .
             git commit -m "Add new resource files"
             git push origin HEAD:${BRANCH_NAME}
             gh pr create --title "Add resource files" --body "This PR adds the resource files." --head ${BRANCH_NAME} --base main --reviewer ${{ github.repository_owner }}
