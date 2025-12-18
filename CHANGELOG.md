@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.8](https://github.com/Shonz1/Void.Data/compare/v0.1.7...v0.1.8) (2025-12-18)
+
+
+### Features
+
+* update sdk and dependencies ([#27](https://github.com/Shonz1/Void.Data/issues/27)) ([9257a62](https://github.com/Shonz1/Void.Data/commit/9257a6207e01dea13c6f0e79d4933d5a7bf3fb76))
+
 ## [0.1.7](https://github.com/Shonz1/Void.Data/compare/v0.1.6...v0.1.7) (2025-12-18)
 
 
