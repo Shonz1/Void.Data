@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.6](https://github.com/Shonz1/Void.Data/compare/v0.1.5...v0.1.6) (2025-12-17)
+
+
+### Bug Fixes
+
+* update resources script ([#22](https://github.com/Shonz1/Void.Data/issues/22)) ([99fe299](https://github.com/Shonz1/Void.Data/commit/99fe299dc5b0d35f6804d69a20498c574bc34b4e))
+
 ## [0.1.5](https://github.com/Shonz1/Void.Data/compare/v0.1.4...v0.1.5) (2025-12-09)
 
 
