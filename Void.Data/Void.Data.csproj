@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -9,10 +9,10 @@
   <ItemGroup>
     <JsonResource Include="Resources\**\*" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <PackageReference Include="Void.Minecraft" Version="0.5.4" />
-    <PackageReference Include="Void.Proxy.Api" Version="0.5.4" />
+    <PackageReference Include="Void.Minecraft" Version="0.5.5" />
+    <PackageReference Include="Void.Proxy.Api" Version="0.5.5" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,7 +50,7 @@
         {
             var source = Sources[i].ItemSpec;
             var output = Outputs[i].ItemSpec;
-            
+
             Log.LogMessage(MessageImportance.High, $"Compressing {source} -> {output}");
 
             Directory.CreateDirectory(Path.GetDirectoryName(output)!);
