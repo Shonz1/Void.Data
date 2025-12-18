@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.7](https://github.com/Shonz1/Void.Data/compare/v0.1.6...v0.1.7) (2025-12-18)
+
+
+### Features
+
+* make library not plugin ([#25](https://github.com/Shonz1/Void.Data/issues/25)) ([855b47d](https://github.com/Shonz1/Void.Data/commit/855b47dd8550d7bd639002bf5ba148442750d148))
+
 ## [0.1.6](https://github.com/Shonz1/Void.Data/compare/v0.1.5...v0.1.6) (2025-12-17)
 
 
