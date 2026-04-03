@@ -39,9 +39,9 @@ jobs:
           git add .
           if ! git diff HEAD --quiet; then
             git checkout -b ${BRANCH_NAME}
-            git commit -m "Add new resource files"
+            git commit -m "feat: add new resource files"
             git push origin HEAD:${BRANCH_NAME}
-            gh pr create --title "Add resource files" --body "This PR adds the resource files." --head ${BRANCH_NAME} --base main --reviewer ${{ github.repository_owner }}
+            gh pr create --title "feat: add resource files" --body "This PR adds the resource files." --head ${BRANCH_NAME} --base main --reviewer ${{ github.repository_owner }}
           else
             echo "No changes to commit."
           fi
