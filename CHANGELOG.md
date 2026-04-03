@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.9](https://github.com/Shonz1/Void.Data/compare/v0.1.8...v0.1.9) (2026-04-03)
+
+
+### Features
+
+* add new resource files ([#33](https://github.com/Shonz1/Void.Data/issues/33)) ([6b82172](https://github.com/Shonz1/Void.Data/commit/6b8217241aded7ff9543ed1a65f641b1b22c2e4d))
+
 ## [0.1.8](https://github.com/Shonz1/Void.Data/compare/v0.1.7...v0.1.8) (2025-12-18)
 
 
