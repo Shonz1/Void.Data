@@ -12,7 +12,7 @@ internal class MinecraftPacketRegistry
   public static MinecraftPacketPhaseRegistry? GetRegistry(ProtocolVersion protocolVersion)
   {
     var assembly = typeof(MinecraftPacketRegistry).Assembly;
-    var versionName = protocolVersion.VersionIntroducedIn;
+    var versionName = protocolVersion.FirstRelease.ToString();
 
     lock (Cache)
     {
