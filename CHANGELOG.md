@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.11](https://github.com/Shonz1/Void.Data/compare/v0.1.10...v0.1.11) (2026-04-14)
+
+
+### Features
+
+* make dependabot PRs with feat prefix ([#41](https://github.com/Shonz1/Void.Data/issues/41)) ([1e3e9c5](https://github.com/Shonz1/Void.Data/commit/1e3e9c5f476487256cb32b3e0206502237df19ab))
+
 ## [0.1.10](https://github.com/Shonz1/Void.Data/compare/v0.1.9...v0.1.10) (2026-04-10)
 
 
