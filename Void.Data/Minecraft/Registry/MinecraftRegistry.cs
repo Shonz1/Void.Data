@@ -12,7 +12,7 @@ internal class MinecraftRegistry
   public static MinecraftRegistry? GetRegistry(ProtocolVersion protocolVersion)
   {
     var assembly = typeof(MinecraftRegistry).Assembly;
-    var versionName = protocolVersion.VersionIntroducedIn;
+    var versionName = protocolVersion.FirstRelease.ToString();
 
     lock (Cache)
     {
