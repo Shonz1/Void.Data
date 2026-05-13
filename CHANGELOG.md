@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.12](https://github.com/Shonz1/Void.Data/compare/v0.1.11...v0.1.12) (2026-05-13)
+
+
+### Features
+
+* add data component type registry support ([#43](https://github.com/Shonz1/Void.Data/issues/43)) ([d627e9a](https://github.com/Shonz1/Void.Data/commit/d627e9a073f711ebaa954e8be78981ea1be18878))
+
 ## [0.1.11](https://github.com/Shonz1/Void.Data/compare/v0.1.10...v0.1.11) (2026-04-14)
 
 
