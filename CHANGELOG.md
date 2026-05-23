@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.13](https://github.com/Shonz1/Void.Data/compare/v0.1.12...v0.1.13) (2026-05-23)
+
+
+### Features
+
+* Bump Void.Minecraft and Void.Proxy.Api ([#45](https://github.com/Shonz1/Void.Data/issues/45)) ([33dd4e0](https://github.com/Shonz1/Void.Data/commit/33dd4e09cee0bc655cdbf20eca8dab5c507baeba))
+* Bump Void.Proxy.Api from 0.5.13 to 0.5.16 ([#46](https://github.com/Shonz1/Void.Data/issues/46)) ([8fdc30b](https://github.com/Shonz1/Void.Data/commit/8fdc30b54cdf9c5c7f85a3b2e5a55a6c6574db0a))
+
 ## [0.1.12](https://github.com/Shonz1/Void.Data/compare/v0.1.11...v0.1.12) (2026-05-13)
 
 
